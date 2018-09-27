@@ -106,3 +106,5 @@ venv.bak/
 actuasim_iot/
 
 \.DS_Store
+
+\.idea/
