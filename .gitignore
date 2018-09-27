@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+actuasim_iot/
+
+\.DS_Store
