@@ -11,5 +11,5 @@ control_endpoint = ('0.0.0.0', 3672)
 
 knx = KnxnetProtocol(gateway_ip, gateway_port, 3672, data_endpoint, control_endpoint)
 knx.connect()
-print(knx.write("3/4/11", 130))
+print(knx.read("4/4/11"))
 

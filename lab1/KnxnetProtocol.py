@@ -64,9 +64,9 @@ class KnxnetProtocol:
         data_recv, addr = self.sock.recvfrom(1024)
         disconnect_resp_obj = knxnet.decode_frame(data_recv)
         if disconnect_resp_obj.status:
-            print("Disconnect: OK")
+            print("Disconnect: Failed (code ", disconnect_resp_obj.status, ")")
         else:
-            print("Disconnect: Failed")
+            print("Disconnect: OK")
 
     def __action(self, dest_addr_group, acpi, data, data_size):
         if acpi != self.READ and acpi != self.WRITE:
