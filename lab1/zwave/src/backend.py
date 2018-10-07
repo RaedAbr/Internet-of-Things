@@ -181,7 +181,6 @@ class Backend():
 
     def network_info(self):
 
-        #### COMPLETE THIS METHOD ##############
         ret = {"Network Home ID": hex(self.network.home_id)}
         for node in self.network.nodes.itervalues():
             ret["node " + str(node.node_id)] = {
@@ -192,7 +191,7 @@ class Backend():
                 "Node name": node.name,
                 "Product name": node.product_name,
                 "Query stage": node.getNodeQueryStage,
-                # TODO: "Query stage (%)": node.query_stage,
+                "Query stage (%)": self.queryStages[node.getNodeQueryStage] * 100.0 / len(self.queryStages),
             }
         return jsonify(ret)
 
@@ -222,8 +221,6 @@ class Backend():
 
     def get_nodes_list(self):
 
-        #### COMPLETE THIS METHOD ##############
-
         ret = {}
         for node in self.network.nodes.itervalues():
             ret["Node id : " + str(node.node_id)] = {
@@ -232,8 +229,6 @@ class Backend():
                 "Node Type": node.type,
                 "Product name": node.product_name,
                 "Query stage": node.getNodeQueryStage,
-                "Product Type": node.product_type,
-                "Generic": node.generic,
                 "Manufacturer Name": node.manufacturer_name,
                 "Is Ready": node.isReady,
             }
@@ -286,9 +281,27 @@ class Backend():
 
     def get_nodes_Configuration(self):
 
-        #### COMPLETE THIS METHOD ##############
+        ret = {"Network Home ID": hex(self.network.home_id)}
+        for node in self.network.nodes.itervalues():
+            if node.isReady:
+                values = node.get_values("All", "Config", "All", "All", "All")
+                returned_list = {
+                    "Enable Motion Sensor": "Enable Motion Sensor",
+                    "Group 1 Interval": "Group 1 Interval",
+                    "Group 1 Reports": "Group 1 Reports",
+                    "Group 2 Interval": "Group 2 Interval",
+                    "Group 2 Reports": "Group 2 Reports",
+                    "Group 3 Interval": "Group 3 Interval",
+                    "Group 3 Reports": "Group 3 Reports",
+                    "On time": "Wake-up Interval",
+                }
+                ret_list = {"Node Id": str(node.node_id)}
+                for val in values.itervalues():
+                    if val.label in returned_list:
+                        ret_list[returned_list[val.label]] = val.data
+                ret["Node " + str(node.node_id)] = ret_list
 
-        return "this method returns a JSON that gives an overview of the network and it's nodes' configuration parameters (like the ID, Wake-up Interval, Group 1 Reports, Group 1 Interval ...)"
+        return jsonify(ret)
 
 
 #######################################################################################################################
@@ -299,11 +312,20 @@ class Backend_with_sensors(Backend):
 
     def get_sensors_list(self):
 
-        #### COMPLETE THIS METHOD ##############
+        ret = {}
+        for node in self.network.nodes.itervalues():
+            if node.product_name == "MultiSensor 6":
+                ret["Node id : " + str(node.node_id)] = {
+                    "Node location": node.location,
+                    "Node name": node.name,
+                    "Node Type": node.type,
+                    "Product name": node.product_name,
+                    "Query stage": node.getNodeQueryStage,
+                    "Manufacturer Name": node.manufacturer_name,
+                    "Is Ready": node.isReady,
+                }
 
-
-
-        return "this method returns the list of sensors"
+        return jsonify(ret)
 
     def get_temperature(self, n):
 
@@ -341,8 +363,6 @@ class Backend_with_sensors(Backend):
 
     def get_luminance(self, n):
 
-        #### COMPLETE THIS METHOD ##############
-
         for node in self.network.nodes.itervalues():
             if node.node_id == n and node.isReady and n != 1 and "timestamp" + str(node.node_id) in self.timestamps:
                 values = node.get_values(0x31, "User", "All", True, False)
@@ -356,8 +376,6 @@ class Backend_with_sensors(Backend):
 
     def get_motion(self, n):
 
-        #### COMPLETE THIS METHOD ##############
-
         for node in self.network.nodes.itervalues():
             if node.node_id == n and node.isReady and n != 1 and "timestamp" + str(node.node_id) in self.timestamps:
                 values = node.get_values(0x30, "User", "All", True, False)
@@ -370,22 +388,15 @@ class Backend_with_sensors(Backend):
 
     def get_battery(self, n):
 
-        #### COMPLETE THIS METHOD ##############
-
         for node in self.network.nodes.itervalues():
             if node.node_id == n and node.isReady:
-                values = node.get_values("All", "User", "All", True, False)
-                for value in values.itervalues():
-                    if value.label == "Battery Level":
-                        val = int(value.data)
-                        return jsonify(controller=name, sensor=node.node_id, location=node.location,
-                                       type=value.label.lower(),
-                                       updateTime=self.timestamps["timestamp" + str(node.node_id)], value=val)
+                value = node.get_battery_level()
+                return jsonify(controller=name, sensor=node.node_id, location=node.location,
+                               type="Battery",
+                               updateTime=self.timestamps["timestamp" + str(node.node_id)], value=value)
         return "Node not ready or wrong sensor node !"
 
     def get_all_Measures(self, n):
-
-        #### COMPLETE THIS METHOD ##############
 
         for node in self.network.nodes.itervalues():
             if node.node_id == n and node.isReady:
@@ -398,23 +409,26 @@ class Backend_with_sensors(Backend):
                 }
                 measures_list = {
                     "Battery Level": "battery",
-                    "sensor": "motion",
+                    "Sensor": "motion",
                     "Relative Humidity": "humidity",
                     "Luminance": "luminance",
-                    "Temperature": "luminance",
+                    "Temperature": "temperature",
                 }
                 for value in values.itervalues():
                     if value.label in measures_list:
-                        ret[value.label] = value.data
+                        ret[measures_list[value.label]] = value.data
                 return jsonify(ret)
         return "Node not ready or wrong sensor node !"
 
     def set_basic_sensor_nodes_configuration(self, Grp_interval, Grp_reports, Wakeup_interval):
 
-        #### COMPLETE THIS METHOD ##############
+        for node in self.network.nodes.itervalues():
+            if node.product_name == "MultiSensor 6" and node.isReady:
+                node.set_config_param(0x6F, Grp_interval, 4)
+                node.set_config_param(0x65, Grp_reports, 4)
+                node.set_config_param(0x03, Wakeup_interval, 2)
 
-        return "this method configures the sensor nodes with a specific configuration"
-
+        return jsonify(Group_Interval=Grp_interval, Group_Reports=Grp_reports, Wakeup_interval=Wakeup_interval)
 
 ###########################################################################################################################
 ###########################################################################################################################
@@ -428,19 +442,27 @@ class Backend_with_dimmers(Backend):
         Backend.__init__(self)
 
     def get_dimmers(self):
-        #### COMPLETE THIS METHOD ##############
 
-        return "this method returns the list of dimmers"
+        ret = {}
+        for node in self.network.nodes.itervalues():
+            if node.product_name == "ZE27":
+                ret["Node id : " + str(node.node_id)] = {
+                    "Node location": node.location,
+                    "Node name": node.name,
+                    "Node Type": node.type,
+                    "Product name": node.product_name,
+                    "Query stage": node.getNodeQueryStage,
+                    "Manufacturer Name": node.manufacturer_name,
+                    "Is Ready": node.isReady,
+                }
+
+        return jsonify(ret)
 
     def get_dimmer_level(self, n):
-        #### COMPLETE THIS METHOD ##############
 
         for node in self.network.nodes.itervalues():
             if node.node_id == n and node.isReady:
-                # print node.values
-                # values = node.get_values("All", "User", "All", True, False)
                 for value in node.values.itervalues():
-                    # print value.label
                     if value.label == "Level":
                         val = value.data
                         return jsonify(controller=name, sensor=node.node_id, location=node.location,
@@ -449,16 +471,12 @@ class Backend_with_dimmers(Backend):
         return "Node not ready or wrong sensor node !"
 
     def set_dimmer_level(self, n, level):
-        #### COMPLETE THIS METHOD ##############
 
-        print n
-        print level
         for node in self.network.nodes.itervalues():
             if node.node_id == n and node.isReady:
-                print node.set_config_param(9, level, 2)
-
-        return "this method sets a dimmer's brightness level of a specific node"
-
+                for value in node.values.itervalues():
+                    if value.label == "Level":
+                        value.data = level
 
 ###########################################################################################################################
 ###########################################################################################################################
