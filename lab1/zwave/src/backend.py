@@ -283,7 +283,7 @@ class Backend():
 
         ret = {"Network Home ID": hex(self.network.home_id)}
         for node in self.network.nodes.itervalues():
-            if node.isReady:
+            if node.isReady and node.product_name == "MultiSensor 6":
                 values = node.get_values("All", "Config", "All", "All", "All")
                 returned_list = {
                     "Enable Motion Sensor": "Enable Motion Sensor",
