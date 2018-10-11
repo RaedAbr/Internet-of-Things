@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ url_for('static', filename = 'img/favicon.png') }}">
+
+    <title>Smart Building - 404 Error</title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="{{ url_for('static', filename = 'vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Page level plugin CSS-->
+    <link href="{{ url_for('static', filename = 'vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename = 'css/sb-admin.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename = 'vendor/fontawesome-free/css/font-awesome.min.css') }}" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+      <a class="navbar-brand mr-1" href="index.html">Smart Building</a>
+
+      <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa fa-bars"></i>
+      </button>
+
+    </nav>
+
+    <div id="wrapper">
+
+      <!-- Sidebar -->
+       <ul class="sidebar navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="index.html">
+            <i class="fas fa-fw fa fa-tachometer"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link dropdown-toggle" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false" href="#">
+                <i class="fas fa-fw fa fa-globe"></i>
+                <span>Network</span>
+            </a>
+              <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                <a class="dropdown-item" href="network.html">Network info</a>
+                <a class="dropdown-item" href="networkConfig.html">Configuration</a>
+              </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="nodes.html">
+                <i class="fas fa-fw fa fa-linode"></i>
+                <span>Nodes</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="sensors.html">
+                <i class="fas fa-fw fa fa-feed"></i>
+                <span>Sensors</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="actuators.html">
+                <i class="fas fa-fw fa fa-cogs"></i>
+                <span>Actuators</span>
+            </a>
+        </li>
+      </ul>
+
+      <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+          <!-- Breadcrumbs-->
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="index.html">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">404 Error</li>
+          </ol>
+
+          <!-- Page Content -->
+          <h1 class="display-1">404</h1>
+          <p class="lead">Page not found. You can
+            <a href="javascript:history.back()">go back</a>
+            to the previous page, or
+            <a href="index.html">return home</a>.</p>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer class="sticky-footer">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>IoT lab Smart Building MSE 2018</span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+      <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename = 'vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename = 'vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename = 'js/sb-admin.min.js') }}"></script>
+
+  </body>
+
+</html>
