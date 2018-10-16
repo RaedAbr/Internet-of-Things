@@ -20,9 +20,9 @@ def network():
 @app.route('/networkConfig.html', methods=['GET', 'POST'])
 def network_config():
     if request.method == 'POST':
-        group1_interval = request.form['group1_interval']
-        group1_report = request.form['group1_report']
-        wakeup_interval = request.form['wakeup_interval']
+        group1_interval = request.form['group1Interval']
+        group1_report = request.form['group1Report']
+        wakeup_interval = request.form['wakeupInterval']
         requests.post(
             'http://192.168.1.2:5000/network/set_sensor_nodes_basic_configuration',
             json={
@@ -81,7 +81,6 @@ def actuator_level():
                 "value": new_level_val
             }
         )
-        sleep(5)
 
     actuator_obj = requests.get('http://192.168.1.2:5000/dimmers/' + str(node_id) + '/get_level').json()
     node = {
