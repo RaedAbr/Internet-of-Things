@@ -32,7 +32,7 @@ class KnxnetProtocol:
         conn_resp_object = knxnet.decode_frame(data_recv)
         if conn_resp_object.status != 0:
             print("Receiving connection response failed")
-            return
+            return -1
 
         # <- Retrieving channel_id from Connection response
         self.conn_channel_id = conn_resp_object.channel_id
@@ -49,8 +49,9 @@ class KnxnetProtocol:
         conn_state_resp_object = knxnet.decode_frame(data_recv)
         if conn_state_resp_object.status:
             print("Receiving connection state response failed")
-            return
+            return -1
         print("Connect: OK")
+        return 0
 
     def disconnect(self):
         # -> Sending Disconnect request
@@ -65,8 +66,10 @@ class KnxnetProtocol:
         disconnect_resp_obj = knxnet.decode_frame(data_recv)
         if disconnect_resp_obj.status:
             print("Disconnect: Failed (code ", disconnect_resp_obj.status, ")")
+            return -1
         else:
             print("Disconnect: OK")
+            return 0
 
     def __action(self, dest_addr_group, acpi, data, data_size):
         if acpi != self.READ and acpi != self.WRITE:
@@ -106,14 +109,14 @@ class KnxnetProtocol:
     def read(self, dest_addr_group):
         if dest_addr_group[0] != "4" and dest_addr_group[0] != "0":
             print("Invalid x")
-            return
+            return -1
         return self.__action(dest_addr_group, self.READ, 0, 1)
 
     def write(self, dest_addr_group, data):
         if dest_addr_group[0] != "1" and dest_addr_group[0] != "3" and dest_addr_group[0] != "0":
             print("Invalid x")
-            return
+            return -1
         if 0 > data > 255:
             print("Value must be between 0 and 255")
-            return
+            return -1
         return self.__action(dest_addr_group, self.WRITE, data, 2)

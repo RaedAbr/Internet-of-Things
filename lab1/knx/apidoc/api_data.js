@@ -1,0 +1,548 @@
+define({ "api": [
+  {
+    "type": "post",
+    "url": "/fullCloseBlind/<floor>/<bloc>",
+    "title": "",
+    "name": "full_close_blind",
+    "group": "Blinds",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Example of result in case of success:",
+          "content": "{\n    \"action\": \"Full close blind\",\n    \"bloc\": 2,\n    \"floor\": 4,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Set value of given blind</p>",
+    "error": {
+      "examples": [
+        {
+          "title": "Error during knx connection",
+          "content": "{\n  \"error\": \"Error occured: knx.connect()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx write",
+          "content": "{\n  \"error\": \"Error occured: knx.write()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx disconnection",
+          "content": "{\n  \"error\": \"Error occured: knx.disconnect()\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/knx_server.py",
+    "groupTitle": "Blinds"
+  },
+  {
+    "type": "post",
+    "url": "/fullOpenBlind/<floor>/<bloc>",
+    "title": "",
+    "name": "full_open_blind",
+    "group": "Blinds",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Example of result in case of success:",
+          "content": "{\n    \"action\": \"Full open blind\",\n    \"bloc\": 2,\n    \"floor\": 4,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Set value of given blind</p>",
+    "error": {
+      "examples": [
+        {
+          "title": "Error during knx connection",
+          "content": "{\n  \"error\": \"Error occured: knx.connect()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx write",
+          "content": "{\n  \"error\": \"Error occured: knx.write()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx disconnection",
+          "content": "{\n  \"error\": \"Error occured: knx.disconnect()\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/knx_server.py",
+    "groupTitle": "Blinds"
+  },
+  {
+    "type": "get",
+    "url": "/blind/<floor>/<bloc>",
+    "title": "",
+    "name": "get_blind",
+    "group": "Blinds",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "value",
+            "description": "<p>Valve's value</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Example of result in case of success:",
+          "content": "{\n    \"action\": \"Get blind value\",\n    \"bloc\": 2,\n    \"floor\": 4,\n    \"value\": 100\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Get information on given valve in JSON format</p>",
+    "error": {
+      "examples": [
+        {
+          "title": "Error during knx connection",
+          "content": "{\n  \"error\": \"Error occured: knx.connect()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx read",
+          "content": "{\n  \"error\": \"Error occured: knx.read()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx disconnection",
+          "content": "{\n  \"error\": \"Error occured: knx.disconnect()\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/knx_server.py",
+    "groupTitle": "Blinds"
+  },
+  {
+    "type": "post",
+    "url": "/blind/<floor>/<bloc>",
+    "title": "",
+    "name": "set_blind",
+    "group": "Blinds",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Exemple :",
+          "content": "{\n    \"new_value\": 100\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "value",
+            "description": "<p>Valve's value</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Example of result in case of success:",
+          "content": "{\n    \"action\": \"Set blind value\",\n    \"bloc\": 2,\n    \"floor\": 4,\n    \"value\": 100\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Set value of given blind</p>",
+    "error": {
+      "examples": [
+        {
+          "title": "Error during knx connection",
+          "content": "{\n  \"error\": \"Error occured: knx.connect()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx write",
+          "content": "{\n  \"error\": \"Error occured: knx.write()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx disconnection",
+          "content": "{\n  \"error\": \"Error occured: knx.disconnect()\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/knx_server.py",
+    "groupTitle": "Blinds"
+  },
+  {
+    "type": "get",
+    "url": "/valve/<floor>/<bloc>",
+    "title": "",
+    "name": "get_valve",
+    "group": "Valves",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "value",
+            "description": "<p>Valve's value</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Example of result in case of success:",
+          "content": "{\n    \"action\": \"Get valve value\",\n    \"bloc\": 2,\n    \"floor\": 4,\n    \"value\": 100\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Get information on given valve in JSON format</p>",
+    "error": {
+      "examples": [
+        {
+          "title": "Error during knx connection",
+          "content": "{\n  \"error\": \"Error occured: knx.connect()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx read",
+          "content": "{\n  \"error\": \"Error occured: knx.read()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx disconnection",
+          "content": "{\n  \"error\": \"Error occured: knx.disconnect()\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/knx_server.py",
+    "groupTitle": "Valves"
+  },
+  {
+    "type": "post",
+    "url": "/valve/<floor>/<bloc>",
+    "title": "",
+    "name": "set_valve",
+    "group": "Valves",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Exemple :",
+          "content": "{\n    \"new_value\": 100\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "bloc",
+            "description": "<p>Bloc number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "floor",
+            "description": "<p>Floor number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "value",
+            "description": "<p>Valve's value</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Example of result in case of success:",
+          "content": "{\n    \"action\": \"Set valve value\",\n    \"bloc\": 2,\n    \"floor\": 4,\n    \"value\": 100\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Set value of given valve</p>",
+    "error": {
+      "examples": [
+        {
+          "title": "Error during knx connection",
+          "content": "{\n  \"error\": \"Error occured: knx.connect()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx write",
+          "content": "{\n  \"error\": \"Error occured: knx.write()\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error during knx disconnection",
+          "content": "{\n  \"error\": \"Error occured: knx.disconnect()\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/knx_server.py",
+    "groupTitle": "Valves"
+  }
+] });

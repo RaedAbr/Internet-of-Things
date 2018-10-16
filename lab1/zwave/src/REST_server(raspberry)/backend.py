@@ -477,7 +477,6 @@ class Backend_with_dimmers(Backend):
                 for value in node.values.itervalues():
                     if value.label == "Level":
                         value.data = level
-                        time.sleep(1)
 
 
 ###########################################################################################################################

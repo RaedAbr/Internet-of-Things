@@ -23,8 +23,8 @@ import argparse
 from KnxnetProtocol import KnxnetProtocol
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-gwip", "--geteway_ip", help="Geteway ip", required=True)
-parser.add_argument("-gwprt", "--geteway_port", help="Geteway port", required=True, type=int)
+parser.add_argument("-gwip", "--gateway_ip", help="Gateway ip", required=True)
+parser.add_argument("-gwprt", "--gateway_port", help="Gateway port", required=True, type=int)
 parser.add_argument("-a", "--action", help="write a value to a store or a blind",
                     choices=["r", "w"])
 parser.add_argument("-v", "--value", help="Value to write on a store or a blind, not required "
@@ -33,14 +33,14 @@ parser.add_argument("-gadr", "--group_address", help="Group address")
 
 args = parser.parse_args()
 
-gateway_ip = args.geteway_ip
-gateway_port = args.geteway_port
+gateway_ip = args.gateway_ip
+gateway_port = args.gateway_port
 
 data_endpoint = ('0.0.0.0', 3672)
 control_endpoint = ('0.0.0.0', 3672)
 
-print("Geteway ip: ", gateway_ip)
-print("Geteway port: ", gateway_port)
+print("Gateway ip: ", gateway_ip)
+print("Gateway port: ", gateway_port)
 
 grp_addr = args.group_address
 

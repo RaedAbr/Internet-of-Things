@@ -72,6 +72,11 @@ def sensor_measures():
 @app.route('/actuatorLevel.html', methods=["GET", "POST"])
 def actuator_level():
     node_id = request.args.get("nodeid", 0)
+    actuator_obj = requests.get('http://192.168.1.2:5000/dimmers/' + str(node_id) + '/get_level').json()
+    node = {
+        'id': node_id,
+        'actuator': actuator_obj
+    }
     if request.method == "POST":
         new_level_val = request.form['actuatorLevel']
         requests.post(
@@ -81,12 +86,8 @@ def actuator_level():
                 "value": new_level_val
             }
         )
+        node['actuator']['value'] = new_level_val
 
-    actuator_obj = requests.get('http://192.168.1.2:5000/dimmers/' + str(node_id) + '/get_level').json()
-    node = {
-        'id': node_id,
-        'actuator': actuator_obj
-    }
     return render_template("actuatorLevel.html", node=node)
 
 
@@ -119,4 +120,5 @@ def get_nodes_configuration():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=3001)
+
