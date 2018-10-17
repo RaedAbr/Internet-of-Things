@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ url_for('static', filename = 'img/favicon.png') }}">
+
+    <title>Smart Building</title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="{{ url_for('static', filename = 'vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Page level plugin CSS-->
+    <link href="{{ url_for('static', filename = 'vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename = 'css/sb-admin.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  </head>
+
+  <body class="bg-dark">
+
+    <div class="container">
+      <div class="card card-login mx-auto mt-5">
+        <div class="card-header">Server Config</div>
+        <div class="card-body">
+          <form method="post" action="server_config.html">
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="inputIp" name="inputIp" class="form-control" placeholder="Ip address" required="required" autofocus="autofocus">
+                <label for="inputip">Ip address</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="number" id="inputPort" name="inputPort" class="form-control" placeholder="Port" required="required">
+                <label for="inputPort">Port</label>
+              </div>
+            </div>
+            <input type="submit" class="btn btn-danger btn-block" value="Submit">
+            <a class="btn btn-secondary btn-block" href="index.html">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename = 'vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename = 'vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  </body>
+
+</html>
