@@ -10,16 +10,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.estimote.coresdk.common.config.EstimoteSDK;
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.recognition.packets.Beacon;
 import com.estimote.coresdk.service.BeaconManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Console;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         rooms.put(43216, "1");
         rooms.put(10279, "2");
         return rooms;
+    }
+
+    static private RequestQueue queue = null;
+    private RequestQueue getRequestQueue() {
+        return queue != null ? queue : Volley.newRequestQueue(this);
     }
 
     // In the "OnCreate" function below:
@@ -93,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 int number = Integer.parseInt(Percentage.getText().toString());
                 if (number<100) {
                     number++;
-                    Log.d("IoTLab-Inc", String.format("%d",number));
+                    Log.e("IoTLab-Inc", String.format("%d",number));
                     Percentage.setText(String.format("%d",number));
                 }
             }
@@ -104,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 int number = Integer.parseInt(Percentage.getText().toString());
                 if (number>0) {
                     number--;
-                    Log.d("IoTLab-Dec", String.format("%d",number));
+                    Log.e("IoTLab-Dec", String.format("%d",number));
                     Percentage.setText(String.format("%d",number));
                 }
             }
@@ -115,14 +138,22 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
         LightButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Send HTTP Request to command light
-                Log.d("IoTLab", Percentage.getText().toString());
+                // Send HTTP Request to command light
+                Log.e("IoTLab", Percentage.getText().toString());
+
+                String[] urls = {"http://192.168.2.1:5000/dimmers/set_level"};
+                try {
+                    JSONObject jsonBody = new JSONObject();
+                    jsonBody.put("node_id", "5");
+                    jsonBody.put("value", MainActivity.this.Percentage.getText().toString());
+
+                    sendPostRequest(urls, jsonBody, urls.length);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -132,8 +163,23 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
 
-                // TODO Send HTTP Request to command store
+                // Send HTTP Request to command store
                 Log.d("IoTLab", Percentage.getText().toString());
+
+                String[] urls = {
+                        "http://192.168.2.7:3002/blind/4/2",
+                        "http://192.168.2.7:3002/blind/4/1"
+                };
+
+                try {
+                    Integer percentage = Integer.valueOf(MainActivity.this.Percentage.getText().toString());
+                    JSONObject jsonBody = new JSONObject();
+                    jsonBody.put("new_value", percentage * 255 / 100);
+
+                    sendPostRequest(urls, jsonBody, urls.length);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -143,12 +189,73 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
 
-                // TODO Send HTTP Request to command radiator
-                Log.d("IoTLab", Percentage.getText().toString());
+                // Send HTTP Request to command radiator
+                Log.e("IoTLab", Percentage.getText().toString());
+
+                String[] urls = {
+                        "http://192.168.2.7:3002/valve/4/2",
+                        "http://192.168.2.7:3002/valve/4/1"
+                };
+
+                try {
+                    Integer percentage = Integer.valueOf(MainActivity.this.Percentage.getText().toString());
+                    JSONObject jsonBody = new JSONObject();
+                    jsonBody.put("new_value", percentage * 255 / 100);
+
+                    sendPostRequest(urls, jsonBody, urls.length);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
 
+    }
+
+    private void sendPostRequest(final String urls[], final JSONObject jsonBody, final int repeat) {
+        if (repeat == 0) {
+            return;
+        }
+        final String mRequestBody = jsonBody.toString();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urls[repeat - 1], new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("LOG_RESPONSE", response);
+                sendPostRequest(urls, jsonBody, repeat - 1);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_RESPONSE", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String responseString = "";
+                if (response != null) {
+                    responseString = String.valueOf(response.statusCode);
+                }
+                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+
+        getRequestQueue().add(stringRequest);
     }
 
 

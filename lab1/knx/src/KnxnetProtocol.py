@@ -116,6 +116,7 @@ class KnxnetProtocol:
         if dest_addr_group[0] != "1" and dest_addr_group[0] != "3" and dest_addr_group[0] != "0":
             print("Invalid x")
             return -1
+        data = int(data)
         if 0 > data > 255:
             print("Value must be between 0 and 255")
             return -1
