@@ -1,5 +1,6 @@
 package com.example.iot_hes.iotlab;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -18,7 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.estimote.coresdk.common.config.EstimoteSDK;
@@ -27,17 +27,16 @@ import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.recognition.packets.Beacon;
 import com.estimote.coresdk.service.BeaconManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Console;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,38 +49,43 @@ public class MainActivity extends AppCompatActivity {
     Button   RadiatorButton;
 
     private BeaconManager beaconManager;
-    private BeaconRegion beaconRegion = new BeaconRegion("rooms", null, 30874, null);
+    private BeaconRegion region;
 
-    private HashMap<Integer, String> rooms = initRooms();
-
-    private HashMap<Integer, String> initRooms(){
-        HashMap<Integer, String> rooms = new HashMap<>();
-        rooms.put(43216, "1");
-        rooms.put(10279, "2");
-        return rooms;
-    }
+    private static Map<Integer, String> rooms;
+    static String currentRoom;
+    String jsonData;
+//    static {
+//        Map<String, String> rooms = new HashMap<>();
+//        rooms.put("43216", "1");
+//        rooms.put("10279", "2");
+//        ROOMS = Collections.unmodifiableMap(rooms);
+//    }
 
     static private RequestQueue queue = null;
     private RequestQueue getRequestQueue() {
         return queue != null ? queue : Volley.newRequestQueue(this);
     }
 
-    // In the "OnCreate" function below:
-    // - TextView, EditText and Button elements are linked to their graphical parts (Done for you ;) )
-    // - "OnClick" functions for Increment and Decrement Buttons are implemented (Done for you ;) )
-    //
-    // TODO List:
-    // - Use the Estimote SDK to detect the closest Beacon and figure out the current Room
-    //     --> See Estimote documentation:  https://github.com/Estimote/Android-SDK
-    // - Set the PositionText with the Room name
-    // - Implement the "OnClick" functions for LightButton, StoreButton and RadiatorButton
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        jsonData = intent.getStringExtra("data");
+        try {
+            JSONObject jsonOb = new JSONObject(jsonData);
+            JSONArray Jbeacons = jsonOb.getJSONArray("beacons");
+            rooms = new HashMap<>();
+            for (int i = 0; i < Jbeacons.length(); i++) {
+                JSONObject beacon = (JSONObject) Jbeacons.get(i);
+                Log.e("json", beacon.toString());
+                rooms.put(Integer.valueOf(beacon.getString("minor")), beacon.getString("room"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         PositionText   =  findViewById(R.id.PositionText);
         Percentage     =  findViewById(R.id.Percentage);
@@ -94,7 +98,11 @@ public class MainActivity extends AppCompatActivity {
         EstimoteSDK.initialize(getApplicationContext(), "", "");
         EstimoteSDK.enableDebugLogging(true);
 
-        beaconManager = new BeaconManager(getApplicationContext());
+        beaconManager = new BeaconManager(this);
+        region = new BeaconRegion(
+                "rooms",
+                UUID.fromString("b9407f30-f5f8-466e-aff9-25556b57fe6d"),
+                30874, null);
 
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
@@ -102,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!list.isEmpty()) {
                     PositionText.setText(Integer.toString(list.size()));
                     Beacon nearestBeacon = list.get(0);
+                    currentRoom = rooms.get(nearestBeacon.getMinor());
                     PositionText.setText("Room " + rooms.get(nearestBeacon.getMinor()));
                 }
             }
@@ -133,31 +142,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
         LightButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 // Send HTTP Request to command light
                 Log.e("IoTLab", Percentage.getText().toString());
-
-                String[] urls = {"http://192.168.2.1:5000/dimmers/set_level"};
                 try {
-                    JSONObject jsonBody = new JSONObject();
-                    jsonBody.put("node_id", "5");
-                    jsonBody.put("value", MainActivity.this.Percentage.getText().toString());
+                    JSONObject jsonOb = new JSONObject(jsonData);
+                    JSONArray Jlights = jsonOb.getJSONArray("lights");
+                    String selectedLight = "";
+                    for (int i = 0; i < Jlights.length(); i++) {
+                        JSONObject light = (JSONObject) Jlights.get(i);
+                        if (light.getString("room").toString().equals(currentRoom)) {
+                            selectedLight = light.getString("node");
+                        }
+                    }
 
-                    sendPostRequest(urls, jsonBody, urls.length);
+                    ArrayList<String> urls = new ArrayList<>();
+                    urls.add("http://192.168.2.1:5000/dimmers/set_level");
+                    try {
+                        JSONObject jsonBody = new JSONObject();
+                        jsonBody.put("node_id", selectedLight);
+                        jsonBody.put("value", MainActivity.this.Percentage.getText().toString());
+
+                        sendPostRequest(urls, jsonBody, urls.size());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-
-
 
         StoreButton.setOnClickListener(new View.OnClickListener() {
 
@@ -166,24 +182,33 @@ public class MainActivity extends AppCompatActivity {
                 // Send HTTP Request to command store
                 Log.d("IoTLab", Percentage.getText().toString());
 
-                String[] urls = {
-                        "http://192.168.2.7:3002/blind/4/2",
-                        "http://192.168.2.7:3002/blind/4/1"
-                };
-
                 try {
-                    Integer percentage = Integer.valueOf(MainActivity.this.Percentage.getText().toString());
-                    JSONObject jsonBody = new JSONObject();
-                    jsonBody.put("new_value", percentage * 255 / 100);
+                    JSONObject jsonOb = new JSONObject(jsonData);
+                    JSONArray Jblinds = jsonOb.getJSONArray("blinds");
+                    ArrayList<String> urls = new ArrayList<>();
+                    for (int i = 0; i < Jblinds.length(); i++) {
+                        JSONObject blind = (JSONObject) Jblinds.get(i);
+                        if (blind.getString("room").toString().equals(currentRoom)) {
+                            String floor = blind.getString("floor");
+                            String bloc = blind.getString("bloc");
+                            urls.add("http://192.168.2.7:3002/blind/" + floor + "/" + bloc);
+                        }
+                    }
 
-                    sendPostRequest(urls, jsonBody, urls.length);
+                    try {
+                        Integer percentage = Integer.valueOf(MainActivity.this.Percentage.getText().toString());
+                        JSONObject jsonBody = new JSONObject();
+                        jsonBody.put("new_value", percentage * 255 / 100);
+
+                        sendPostRequest(urls, jsonBody, urls.size());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-
-
 
         RadiatorButton.setOnClickListener(new View.OnClickListener() {
 
@@ -192,33 +217,42 @@ public class MainActivity extends AppCompatActivity {
                 // Send HTTP Request to command radiator
                 Log.e("IoTLab", Percentage.getText().toString());
 
-                String[] urls = {
-                        "http://192.168.2.7:3002/valve/4/2",
-                        "http://192.168.2.7:3002/valve/4/1"
-                };
-
                 try {
-                    Integer percentage = Integer.valueOf(MainActivity.this.Percentage.getText().toString());
-                    JSONObject jsonBody = new JSONObject();
-                    jsonBody.put("new_value", percentage * 255 / 100);
+                    JSONObject jsonOb = new JSONObject(jsonData);
+                    JSONArray Jradiators = jsonOb.getJSONArray("radiators");
+                    ArrayList<String> urls = new ArrayList<>();
+                    for (int i = 0; i < Jradiators.length(); i++) {
+                        JSONObject radiator = (JSONObject) Jradiators.get(i);
+                        if (radiator.getString("room").toString().equals(currentRoom)) {
+                            String floor = radiator.getString("floor");
+                            String bloc = radiator.getString("bloc");
+                            urls.add("http://192.168.2.7:3002/valve/" + floor + "/" + bloc);
+                        }
+                    }
 
-                    sendPostRequest(urls, jsonBody, urls.length);
+                    try {
+                        Integer percentage = Integer.valueOf(MainActivity.this.Percentage.getText().toString());
+                        JSONObject jsonBody = new JSONObject();
+                        jsonBody.put("new_value", percentage * 255 / 100);
+
+                        sendPostRequest(urls, jsonBody, urls.size());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-
-
     }
 
-    private void sendPostRequest(final String urls[], final JSONObject jsonBody, final int repeat) {
+    private void sendPostRequest(final ArrayList<String> urls, final JSONObject jsonBody, final int repeat) {
         if (repeat == 0) {
             return;
         }
         final String mRequestBody = jsonBody.toString();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, urls[repeat - 1], new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urls.get(repeat - 1), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("LOG_RESPONSE", response);
@@ -268,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
-                beaconManager.startRanging(beaconRegion);
+                beaconManager.startRanging(region);
             }
         });
     }
@@ -276,19 +310,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        beaconManager.stopRanging(region);
         super.onPause();
-        beaconManager.stopRanging(beaconRegion);
     }
 
 }
-
-
-
-
-
-
-
-
 
 
 // This class is used to filter input, you won't be using it.
