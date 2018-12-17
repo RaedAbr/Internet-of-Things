@@ -1,5 +1,5 @@
 AWS.config.region = 'eu-west-1'; // Region
-AWS.config.credentials = new AWS.Credentials('AKIAJDE4S4WPFLZGYAEQ', 'hCWEvI5YAvlc9ECEJTOVLt7UYRkQPDduh8jT+72R');
+AWS.config.credentials = new AWS.Credentials('AKIAIN4AYBLH6UO5F5AA', 'LXJml7z2byIxKA5aYRvLjRee00MGm4BD3vz0BTWy');
 var dynamodb = new AWS.DynamoDB();
 
 var Name='Name';
@@ -23,7 +23,6 @@ dynamodb.query(params, function(err, data) {
 		return null;
 	} else {
 		for (var i in data['Items']) {
-			console.log(data['Items'][i]);
 			TemperatureRead = parseFloat(data['Items'][i]['temp']['N']);
 			TimeRead = parseFloat(data['Items'][i]['Time']['N']);
 
@@ -88,4 +87,25 @@ dynamodb.query(params, function(err, data) {
 
 	}); 
 
-})
+});
+
+
+// function conditionalDelete() {
+//     var temp = "21.887207";
+
+//     var params = {
+//         TableName: "temp",
+//         Key:{
+// 			"Name": {S: "Inside"},
+// 			"Time": {N: "1544748468874"}
+//         }
+//     };
+
+//     dynamodb.deleteItem(params, function(err, data) {
+//         if (err) {
+//             document.getElementById('textarea').innerHTML = "The conditional delete failed: " + "\n" + JSON.stringify(err, undefined, 2);
+//         } else {
+//             document.getElementById('textarea').innerHTML = "The conditional delete succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+//         }
+//     });
+// }

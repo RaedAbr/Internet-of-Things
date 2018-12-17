@@ -1,5 +1,5 @@
 {
-    "afr_source_dir":"/home/raed/Documents/semester1_master_labs/Internet-of-Things/lab2/amazon-freertos-master",
+    "afr_source_dir":"/home/raed/Documents/Internet-of-Things/lab2/amazon-freertos-master",
     "thing_name":"ESP32",
     "wifi_ssid":"Acer Liquid Zest Plus",
     "wifi_password":"raed12345",
