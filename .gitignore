@@ -108,3 +108,5 @@ actuasim_iot/
 \.DS_Store
 
 \.idea/
+
+\.vscode/
