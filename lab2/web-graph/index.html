@@ -4,23 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="img/AmazonS3.png">
+    <link rel="stylesheet" href="css/style.css">
     <title>Temperature</title>
+    <style>
+        #container2 {
+            height: 400px; 
+            min-width: 310px; 
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 
 <body>
 
     <div id="container"></div>
 
-    <!-- <input id="conditionalDelete" type="button" value="Conditional Delete" onclick="conditionalDelete();" />
-<br><br>
-<textarea readonly id= "textarea" style="width:400px; height:800px"></textarea> -->
+    <table style="width: 100%">
+        <tr>
+            <td id="lamp-td">
+                <div>
+                    <div>
+                        <h4>Waspmote LED1</h4>
+                        Current state: <span id="current-state">...</span><br>
+                        Desired state: <span id="desired-state">...</span>
+                    </div>
+                    <div id="lamp-state-div">
+                        <div id="lamp"></div>
+                        <div id="switch-div">
+                            <label class="switch">
+                                <input id="led-checkbox" type="checkbox" onchange="changeLedStateRequest(this);">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="loader-div">
+                    <div class="loader"></div>
+                    Waiting confirmation...
+                </div>
+            </td>
+            <td>
+                <div id="container2"></div>
+            </td>
+            <td style="text-align: center;">
+                <textarea readonly id= "textarea" rows="20" cols="40" style="resize: none"></textarea>
+            </td>
+        </tr>
+    </table>
 
-
-
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.40.min.js"></script>
-    <script src="index.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.382.0.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/temp.js"></script>
+    <script src="js/accelero.js"></script>
+    <script src="js/lamp.js"></script>
 </body>
