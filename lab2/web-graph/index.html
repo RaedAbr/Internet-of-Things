@@ -5,15 +5,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="img/AmazonS3.png">
     <link rel="stylesheet" href="css/style.css">
-    <title>Temperature</title>
-    <style>
-        #container2 {
-            height: 400px; 
-            min-width: 310px; 
-            max-width: 600px;
-            margin: 0 auto;
-        }
-    </style>
+    <title>IoT Master HES-SO</title>
 </head>
 
 <body>
@@ -39,12 +31,16 @@
                         </div>
                     </div>
                 </div>
-                <div id="loader-div">
+                <div id="loader-div-lamp" class="loader-div">
                     <div class="loader"></div>
-                    Waiting confirmation...
+                    Waiting for LED state from server...
                 </div>
             </td>
             <td>
+                <div id="loader-div-accelero" class="loader-div">
+                    <div class="loader"></div>
+                    Waiting for Accelerometer values from server...
+                </div>
                 <div id="container2"></div>
             </td>
             <td style="text-align: center;">
@@ -52,14 +48,21 @@
             </td>
         </tr>
     </table>
-
+    
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
-    <script src="https://code.highcharts.com/modules/series-label.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.382.0.min.js"></script>
+    <script src="js/Logger.js"></script>
+    <script>
+        Logger.enable();
+        // Logger.open();
+        Logger.close();
+        function logging(msg) {
+            log(JSON.stringify(msg));
+        }
+    </script>
     <script src="js/config.js"></script>
+    <script src="js/websocketClient.js"></script>
     <script src="js/temp.js"></script>
     <script src="js/accelero.js"></script>
     <script src="js/lamp.js"></script>

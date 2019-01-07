@@ -1,51 +1,3 @@
-
-var params = { 
-    TableName: 'accelero',
-    KeyConditionExpression: "dev_id = :dev_id",
-    ExpressionAttributeValues: {
-        ":dev_id": {"S": "waspmote_0"}
-    },
-    Limit: 1,
-    ScanIndexForward: false // to reverse order and get the last record
- };
-
-var acceleroData = {x_acc:"", y_acc:"", z_acc:""};
-function getLastAcceleroData() { 
-    dynamodb.query(params, function(err, data) {
-        if (err) {
-            console.log(err);
-            return null;
-        } else {
-            for (var i in data['Items']) {
-                X_acc = parseInt(data['Items'][i]['x_acc']['N']);
-                Y_acc = parseInt(data['Items'][i]['y_acc']['N']);
-                Z_acc = parseInt(data['Items'][i]['z_acc']['N']);
-                if (
-                    acceleroData.x_acc !== X_acc ||
-                    acceleroData.y_acc !== Y_acc ||
-                    acceleroData.z_acc !== Z_acc
-                ) {
-                    acceleroData = {x_acc: X_acc, y_acc: Y_acc, z_acc: Z_acc};
-
-                    // add data in the textarea
-                    var options = {
-                        year: "numeric", month: "numeric", day: "numeric",
-                        hour: "numeric", minute: "numeric", second: "numeric", hour12: false};
-                    var dateTime = new Date(parseInt(data['Items'][i]['Time']['N']));
-                    var dateTimeString = new Intl.DateTimeFormat("en-US", options).format(dateTime);
-                    var textarea = document.getElementById("textarea");
-                    textarea.value += "** " + dateTimeString + " **\n" + 
-                        JSON.stringify(acceleroData) + "\n\n";
-                    textarea.scrollTop = textarea.scrollHeight;
-
-                    // update data in the 3D chart
-                    chart.series[0].setData([[X_acc, Y_acc, Z_acc]], true);
-                }
-            }
-        }
-    });
-}
-
 // Give the points a 3D feel by adding a radial gradient
 Highcharts.setOptions({
     colors: Highcharts.getOptions().colors.map(function (color) {
@@ -127,13 +79,41 @@ var chartContent = {
         data: []
     }]
 };
+
 // Set up the chart
 var chart = new Highcharts.Chart(chartContent);
+var acceleroData;
+var acceleroFirstTime = true;
 
-// Get and load the first accelerometer values
-getLastAcceleroData();
-// get and load accelerometer values each 5 seconds
-setInterval(getLastAcceleroData, 5000);
+const loaderDivAccelero = document.getElementById("loader-div-accelero");
+const container2 = document.getElementById("container2");
+
+function getLastAcceleroData(data) { 
+    if (acceleroFirstTime) {
+        loaderDivAccelero.hidden = true;
+        container2.style.display = "block";
+    }
+    X_acc = Number(data['x_acc']);
+    Y_acc = Number(data['y_acc']);
+    Z_acc = Number(data['z_acc']);
+    time = Number(data['time']);
+    
+    acceleroData = {x_acc: X_acc, y_acc: Y_acc, z_acc: Z_acc};
+
+    // add data in the textarea
+    var options = {
+        year: "numeric", month: "numeric", day: "numeric",
+        hour: "numeric", minute: "numeric", second: "numeric", hour12: false};
+    var dateTime = new Date(time);
+    var dateTimeString = new Intl.DateTimeFormat("en-US", options).format(dateTime);
+    var textarea = document.getElementById("textarea");
+    textarea.value += "** " + dateTimeString + " **\n" + 
+        JSON.stringify(acceleroData) + "\n\n";
+    textarea.scrollTop = textarea.scrollHeight;
+
+    // update data in the 3D chart
+    chart.series[0].setData([[X_acc, Y_acc, Z_acc]], true);
+}
 
 // Add mouse and touch events for rotation
 (function (H) {

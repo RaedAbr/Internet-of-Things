@@ -1,4 +1,5 @@
 amazon-freertos-master.zip
-web-graph.zip
+esp32-user-credentials.csv
 .vscode/
 .~*
+ssh_key.pem

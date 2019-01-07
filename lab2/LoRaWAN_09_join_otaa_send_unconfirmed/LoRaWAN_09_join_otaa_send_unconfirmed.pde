@@ -68,7 +68,7 @@ void setup()
 
 
   //////////////////////////////////////////////
-  // 1. Switch on
+  // 0. Switch on
   //////////////////////////////////////////////
 
   error = LoRaWAN.ON(socket);
@@ -76,25 +76,29 @@ void setup()
   // Check status
   if( error == 0 ) 
   {
-    USB.println(F("1. Switch ON OK"));     
+    USB.println(F("0. Switch ON OK"));     
   }
   else 
   {
-    USB.print(F("1. Switch ON error = ")); 
+    USB.print(F("0. Switch ON error = ")); 
     USB.println(error, DEC);
   }
 
-  error = LoRaWAN.setRX2Parameters(3, 869525000);
-  // Check status
-  if( error == 0 ) 
-  {
-    USB.println(F("1.1. setRX2Parameters OK"));     
-  }
-  else 
-  {
-    USB.print(F("1.1. setRX2Parameters error = ")); 
-    USB.println(error, DEC);
-  }
+  ////////////////////////////////
+  // 1.1 RX2 parameters
+  ////////////////////////////////
+  
+//  error = LoRaWAN.setRX2Parameters(3, 869525000);
+//  // Check status
+//  if( error == 0 ) 
+//  {
+//    USB.println(F("1.1. setRX2Parameters OK"));     
+//  }
+//  else 
+//  {
+//    USB.print(F("1.1. setRX2Parameters error = ")); 
+//    USB.println(error, DEC);
+//  }
 
   //////////////////////////////////////////////
   // 2. Set Device EUI

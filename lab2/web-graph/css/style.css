@@ -115,6 +115,14 @@ td {
     100% { transform: rotate(360deg); }
   }
 
-  #loader-div {
+  .loader-div {
       text-align: center;
   }
+
+#container2 {
+    height: 400px; 
+    min-width: 310px; 
+    max-width: 600px;
+    margin: 0 auto;
+    display: none;
+}
