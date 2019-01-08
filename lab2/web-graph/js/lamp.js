@@ -56,7 +56,7 @@ function changeLedStateRequest(checkbox) {
     publish();
 }
 
-// Publish an uplink
+// Publish a downlink
 function publish() {
     let payloadJson = '{"port": 1,"confirmed": false,"payload_raw": "' + btoa(desiredLedState) + '"}',  /* btoa convert string to base64 */
         waspmoteTtnTopic = 'iot_2018_19_abdennadher_gindre/devices/waspmote_0/down';
