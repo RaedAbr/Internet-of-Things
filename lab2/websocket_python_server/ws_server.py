@@ -43,6 +43,7 @@ async def broadcast_accelero_state(x_acc, y_acc, z_acc, time):
         'z_acc': z_acc,
         'time': time
     })
+    logging.info(f"> broadcast message: {message}")
     if clients_list:
         await asyncio.wait([user.send(message) for user in clients_list])
 
