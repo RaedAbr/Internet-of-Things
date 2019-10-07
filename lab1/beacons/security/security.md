@@ -10,4 +10,4 @@ Avec cette méthode, et au moment de l'ajout de nouveaux device(s) avec un serve
 
 La figure suivant illustre notre architecture.
 
-![](/home/raed/Documents/semester1_master_labs/Internet-of-Things/lab1/beacons/security/schema.png)
+![](./schema.png)
